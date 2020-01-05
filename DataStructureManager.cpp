@@ -7,8 +7,8 @@
 #include "DataStructureManager.h"
 
 
-DSManager::DSManager(int numOfDS) {
-
+DSManager::DSManager(int numOfDS): num_of_DS(numOfDS), num_of_server(0){
+    servers =
 }
 
 DSManager *DSManager::Init(int num) {
