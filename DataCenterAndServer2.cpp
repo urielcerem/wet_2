@@ -37,6 +37,16 @@ int &DataCenter::NumOfServers() {
     return num_of_servers;
 }
 
-Server *DataCenter::getTrafficTree() {
-    return reinterpret_cast<Server *>(&trafficTree.root);
+AVLTree <Server>*DataCenter::getTrafficTree() {
+    return &trafficTree;
+}
+
+StatusTypeDC DataCenter::AddServer() {
+    ++num_of_servers;
+    return SUCCESS_DC;
+}
+
+StatusTypeDC DataCenter::RemoveServer() {
+    --num_of_servers;
+    return SUCCESS_DC;
 }

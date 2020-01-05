@@ -41,6 +41,8 @@ public:
 	~DataCenter() = default;
 	DataCenter(DataCenter & DC) = default;
 	int & NumOfServers();
-	Server * getTrafficTree();
+    AVLTree <Server>* getTrafficTree();
+    StatusTypeDC AddServer();
+    StatusTypeDC RemoveServer();
 };
 #endif //WET_1_DATACENTER_SERVER_H
