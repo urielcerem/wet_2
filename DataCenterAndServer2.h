@@ -29,7 +29,7 @@ public:
     int &ID();
 	int & Traffic();
     int & BelongsToDataCenter();
-	StatusTypeDC updateTraffic(int traffic);
+	StatusTypeDC updateTraffic(int new_traffic);
 	StatusTypeDC updateDataCenter(int Id);
 };
 

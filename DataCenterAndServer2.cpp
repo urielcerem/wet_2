@@ -17,10 +17,10 @@ int &Server::BelongsToDataCenter() {
     return DCParentId;
 }
 
-StatusTypeDC Server::updateTraffic(int traffic) {
+StatusTypeDC Server::updateTraffic(int new_traffic) {
     if (traffic < 0)
         return INVALID_INPUT_DC;
-    this->traffic = traffic;
+    this->traffic = new_traffic;
     return SUCCESS_DC;
 }
 
