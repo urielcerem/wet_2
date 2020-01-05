@@ -21,20 +21,20 @@ typedef enum {
 class DSManager {
     int num_of_DS;
     int num_of_server;
-    HASH_TABLE <Server> servers;
-    UnionFindSet <DataCenter> data_centers;
-    AVLTree <Server> traffic_tree;
+    HASH_TABLE <Server>* servers;
+    UnionFindSet <DataCenter>* data_centers;
+    AVLTree <Server>* traffic_tree;
 
 public:
     explicit DSManager(int numOfDS);
     ~DSManager() = default;
     DSManager * Init(int num);
-    StatusTypeDSM MergeDataCenters(DSManager *DS, int dataCenter1, int dataCenter2);
-    StatusTypeDSM AddServer(DSManager *DS, int dataCenterID, int serverID);
-    StatusTypeDSM RemoveServer(DSManager *DS, int serverID);
-    StatusTypeDSM SetTraffic(DSManager *DS, int serverID, int traffic);
-    StatusTypeDSM SumHighestTrafficServers(DSManager *DS, int dataCenterID, int k, int *traffic);
-    void Quit(DSManager **DS);
+    StatusTypeDSM MergeDataCenters(DSManager DS, int dataCenter1, int dataCenter2);
+    StatusTypeDSM AddServer(DSManager DS, int dataCenterID, int serverID);
+    StatusTypeDSM RemoveServer(DSManager DS, int serverID);
+    StatusTypeDSM SetTraffic(DSManager DS, int serverID, int traffic);
+    StatusTypeDSM SumHighestTrafficServers(DSManager DS, int dataCenterID, int k, int *traffic);
+    void Quit(DSManager *DS);
 };
 
 #endif //WET_1_DATASTRUCTUREMANAGER_H
