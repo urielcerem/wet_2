@@ -72,10 +72,11 @@ StatusTypeDSM DSManager::RemoveServer(DSManager *DS, int serverID) {
     if (DS == NULL ||  (serverID <=0))
         return INVALID_INPUT_DSM;
     Server* to_remove = servers->Find(serverID);
+    int traffic = to_remove->Traffic();
     if (to_remove == NULL)
         return FAILURE_DSM;
-    traffic_tree->Delete(serverID);
-    data_centers->Find(serverID)->getData()->getTrafficTree()->Delete(serverID);
+    traffic_tree->Delete(traffic + (1 - (1 / serverID)));
+    data_centers->Find(serverID)->getData()->getTrafficTree()->Delete(traffic + (1 - (1 / serverID)));
     return (((StatusTypeDSM)servers->Remove(serverID)==SUCCESS_DSM) &&
             ((StatusTypeDSM)data_centers->Find(serverID)->getData()->RemoveServer() == SUCCESS_DSM))
             ? SUCCESS_DSM: FAILURE_DSM;
