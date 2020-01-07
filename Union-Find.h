@@ -17,35 +17,37 @@ template <class T>
 class UFSetNode{
     int Id;
     T data;
+public:
     UFSetNode <T> * parent;
     int NumOfNodes;
 
-public:
-    explicit UFSetNode(int Id, T data, T* parent = NULL, int NumOfNodes = 1) :Id(Id), data(data), parent(parent), NumOfNodes(NumOfNodes) {}
+    explicit UFSetNode(int Id, T data/*, T* parent = NULL, int NumOfNodes = 1*/) :Id(Id), data(data), parent(NULL), NumOfNodes(1) {}
     ~UFSetNode() = default;
-    int & getID () {
-        return &Id;
+    int getID () {
+        return Id;
     }
-    T & getData (){
+    T * getData (){
         return & data;
     }
+
 };
 
 template <class T>
 class UnionFindSet {
     int NumOfObjects;
-    Array <UFSetNode<T> *> array;
+     UFSetNode<T> ** array;
 
 public:
     /**--constructor as MakeSet---**/
     explicit UnionFindSet (int NumOfObjects): NumOfObjects(NumOfObjects) {
-        array = new Array<UFSetNode<T> *>[NumOfObjects];
+        array = new UFSetNode<T>*[NumOfObjects];
         for (int i = 0; i <NumOfObjects ; ++i) {
-            UFSetNode <T> node(i+1 ,(new T));
+            UFSetNode <T> node(i+1 ,*(new T));
             array[i] = &node;
         }
     }
     ~UnionFindSet () = default;
+
     /**--Find with path compression---**/
     UFSetNode <T> * Find (int i){
         UFSetNode <T> * root = array[i];

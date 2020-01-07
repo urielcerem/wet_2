@@ -1,5 +1,4 @@
 #include "Array.h"
-#include "list.h"
 #include "AVL.h"
 #include "hash_table.h"
 #include "Union-Find.h"
@@ -13,9 +12,9 @@ DSManager::DSManager(int numOfDS): num_of_DS(numOfDS), num_of_server(0){
     traffic_tree = new AVLTree <Server>;
 }
 
-DSManager *DSManager::Init(int num) {
+/**DSManager *DSManager::Init(int num) {
     return new DSManager(num);
-}
+}**/
 
 static bool isValidDCID(int Id, int numOfDC){
     return ((Id >0) && (Id<numOfDC));
@@ -28,19 +27,19 @@ DSManager::MergeDataCenters(DSManager *DS, int dataCenter1, int dataCenter2) {
     int root1 = (*DS).data_centers->Find(dataCenter1)->getID();
     int root2 = (*DS).data_centers->Find(dataCenter2)->getID();
     int new_root = (*DS).data_centers->Union(root1, root2)->getID();
-    DataCenter head1 = (*DS).data_centers->Find(root1)->getData();
-    DataCenter head2 = (*DS).data_centers->Find(root2)->getData();
+    DataCenter* head1 = (*DS).data_centers->Find(root1)->getData();
+    DataCenter* head2 = (*DS).data_centers->Find(root2)->getData();
     if (new_root == root1) {
-        for (int i = 0; i < head2.NumOfServers(); ++i) {
-            head1.getTrafficTree()->Insert(head2.getTrafficTree()->root->data,
-                                           head2.getTrafficTree()->root->key);
-            head2.getTrafficTree()->Delete(head2.getTrafficTree()->root->key);
+        for (int i = 0; i < (*head2).NumOfServers(); ++i) {
+            (*head1).getTrafficTree()->Insert((*head2).getTrafficTree()->root->data,
+                                              (*head2).getTrafficTree()->root->key);
+            (*head2).getTrafficTree()->Delete((*head2).getTrafficTree()->root->key);
         }
     }
     else {
-            for (int i = 0; i < head1.NumOfServers() ; ++i) {
-                head2.getTrafficTree()->Insert(head1.getTrafficTree()->root->data, head1.getTrafficTree()->root->key);
-                head1.getTrafficTree()->Delete(head1.getTrafficTree()->root->key);
+            for (int i = 0; i < head1->NumOfServers() ; ++i) {
+                (*head2).getTrafficTree()->Insert((*head1).getTrafficTree()->root->data, (*head1).getTrafficTree()->root->key);
+                (*head1).getTrafficTree()->Delete((*head1).getTrafficTree()->root->key);
             }
     }
     return SUCCESS_DSM;
@@ -66,7 +65,7 @@ DSManager::AddServer(DSManager *DS, int dataCenterID, int serverID) {
             break;
     }
     ++num_of_server;
-    return (StatusTypeDSM)data_centers->Find(serverID)->getData().AddServer();
+    return (StatusTypeDSM)data_centers->Find(serverID)->getData()->AddServer();
 }
 
 StatusTypeDSM DSManager::RemoveServer(DSManager *DS, int serverID) {
@@ -76,9 +75,9 @@ StatusTypeDSM DSManager::RemoveServer(DSManager *DS, int serverID) {
     if (to_remove == NULL)
         return FAILURE_DSM;
     traffic_tree->Delete(serverID);
-    data_centers->Find(serverID)->getData().getTrafficTree()->Delete(serverID);
+    data_centers->Find(serverID)->getData()->getTrafficTree()->Delete(serverID);
     return (((StatusTypeDSM)servers->Remove(serverID)==SUCCESS_DSM) &&
-            ((StatusTypeDSM)data_centers->Find(serverID)->getData().RemoveServer() == SUCCESS_DSM))
+            ((StatusTypeDSM)data_centers->Find(serverID)->getData()->RemoveServer() == SUCCESS_DSM))
             ? SUCCESS_DSM: FAILURE_DSM;
 }
 
@@ -90,14 +89,14 @@ StatusTypeDSM DSManager::SetTraffic(DSManager *DS, int serverID, int traffic) {
 	if (server == NULL)
 		return FAILURE_DSM;
 	int data_center = server->BelongsToDataCenter();
-	double key = traffic + (1 - 1 / serverID);
-	if (server->Traffic != 0){
+	double key = traffic + (1 - (1 / serverID));
+	if ((*server).Traffic() != 0){
 		DS->traffic_tree->Delete(key);
-		DS->data_centers->Find(data_center)->getData().getTrafficTree()->
+		DS->data_centers->Find(data_center)->getData()->getTrafficTree()->
 			Delete(key);
 	}
 	DS->traffic_tree->Insert(*server, key);
-	DS->data_centers->Find(data_center)->getData().getTrafficTree()->
+	DS->data_centers->Find(data_center)->getData()->getTrafficTree()->
 		Insert(*server, key);
     return SUCCESS_DSM;
 }
@@ -112,11 +111,11 @@ DSManager::SumHighestTrafficServers(DSManager *DS, int dataCenterID, int k,
 		*traffic = DS->traffic_tree->GetKHighestSum(k);
 	else
 		*traffic = DS->data_centers->Find(dataCenterID)->
-			getData().getTrafficTree()->GetKHighestSum(k);
+			getData()->getTrafficTree()->GetKHighestSum(k);
     return SUCCESS_DSM;
 }
 
-void DSManager::Quit(DSManager **DS) {
+/**void DSManager::Quit(DSManager **DS) {
 	delete DS;
-}
+}**/
 

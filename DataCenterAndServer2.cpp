@@ -1,5 +1,3 @@
-#include "Array.h"
-#include "list.h"
 #include "AVL.h"
 #include "DataCenterAndServer2.h"
 
@@ -9,7 +7,7 @@ int &Server::ID() {
     return id;
 }
 
-int &Server::Traffic() {
+int Server::Traffic() {
     return traffic;
 }
 

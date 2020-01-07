@@ -4,9 +4,9 @@
 #include <math.h>
 
 typedef enum {
-	SUCCESS = 0,
-	FAILURE = -1,
-	ALLOCATION_ERROR = -2
+	SUCCESS_HT = 0,
+	FAILURE_HT = -1,
+	ALLOCATION_ERROR_HT = -2
 } StatusTypeHashTable;
 
 typedef enum {
@@ -87,17 +87,17 @@ StatusTypeHashTable HASH_TABLE<T>::Insert(int key, T* item) {
 		num_of_items++;
 		table[modified_key] = new HTNode<T>(item, key);
 		if (!table[modified_key])
-			return ALLOCATION_ERROR;
+			return ALLOCATION_ERROR_HT;
 	}
 	else {
 		HTNode<T> *curr_node = table[modified_key];
 		if ((*curr_node).data == item) {
-			return FAILURE;
+			return FAILURE_HT;
 		}
 		while ((*curr_node).next) {
 			curr_node = (*curr_node).next;
 			if ((*curr_node).data == item) {
-				return FAILURE;
+				return FAILURE_HT;
 			}
 		}
 		num_of_items++;
@@ -106,10 +106,10 @@ StatusTypeHashTable HASH_TABLE<T>::Insert(int key, T* item) {
 	}
 	if (num_of_items >= ratio * size_of_table * 2) {
 		StatusTypeHashTable status_out = ChangeTableSize(INCREASE);
-		if (status_out != SUCCESS)
+		if (status_out != SUCCESS_HT)
 			return status_out;
 	}
-	return SUCCESS;
+	return SUCCESS_HT;
 }
 
 
@@ -123,7 +123,7 @@ StatusTypeHashTable HASH_TABLE<T>::ChangeTableSize(TableSizeFunc func) {
 	HTNode<T> ** old_table = table;
 	table = new HTNode<T>*[size_of_table];
 	if (!table)
-		return ALLOCATION_ERROR;
+		return ALLOCATION_ERROR_HT;
 	num_of_items = 0;
 	for (int i = 0; i < size_of_table; i++) {
 		table[i] = NULL;
@@ -141,12 +141,12 @@ StatusTypeHashTable HASH_TABLE<T>::ChangeTableSize(TableSizeFunc func) {
 			delete curr_node;
 			curr_node = temp_node;
 			status_out = Insert(key, item);
-			if (status_out != SUCCESS)
+			if (status_out != SUCCESS_HT)
 				return status_out;
 		}
 	}
 	delete[] old_table;
-	return SUCCESS;
+	return SUCCESS_HT;
 }
 
 //returns NULL if any error accured//
@@ -176,7 +176,7 @@ template <class T>
 StatusTypeHashTable HASH_TABLE<T>::Remove(int key) {
 	int modified_key = Shuffling_func(key);
 	if (table[modified_key] == nullptr) {
-		return FAILURE;
+		return FAILURE_HT;
 	}
 	else {
 		HTNode<T> *curr_node = table[modified_key];
@@ -189,10 +189,10 @@ StatusTypeHashTable HASH_TABLE<T>::Remove(int key) {
 			num_of_items--;
 			if (num_of_items <= ratio * size_of_table / 2 && size_of_table > ORIGINAL_SIZE) {
 				StatusTypeHashTable status_out = ChangeTableSize(DECREASE);
-				if (status_out != SUCCESS)
+				if (status_out != SUCCESS_HT)
 					return status_out;
 			}
-			return SUCCESS;
+			return SUCCESS_HT;
 		}
 		else {
 			while ((*curr_node).next) {
@@ -206,15 +206,15 @@ StatusTypeHashTable HASH_TABLE<T>::Remove(int key) {
 					num_of_items--;
 					if (num_of_items <= ratio * size_of_table / 2 && size_of_table > ORIGINAL_SIZE) {
 						StatusTypeHashTable status_out = ChangeTableSize(DECREASE);
-						if (status_out != SUCCESS)
+						if (status_out != SUCCESS_HT)
 							return status_out;
 					}
-					return SUCCESS;
+					return SUCCESS_HT;
 				}
 			}
 		}
 	}
-	return FAILURE;
+	return FAILURE_HT;
 }
 
 

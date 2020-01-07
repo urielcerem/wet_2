@@ -3,7 +3,6 @@
 #define WET_1_DATACENTER_SERVER_H
 
 #include "Array.h"
-#include "list.h"
 #include "AVL.h"
 
 typedef enum {
@@ -27,7 +26,7 @@ public:
     //Server(const Server& s) = default;
     //Server& operator=(const Server& s);
     int &ID();
-	int & Traffic();
+	int Traffic();
     int & BelongsToDataCenter();
 	StatusTypeDC updateTraffic(int new_traffic);
 	StatusTypeDC updateDataCenter(int Id);
