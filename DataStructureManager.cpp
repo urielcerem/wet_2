@@ -83,16 +83,40 @@ StatusTypeDSM DSManager::RemoveServer(DSManager *DS, int serverID) {
 }
 
 StatusTypeDSM DSManager::SetTraffic(DSManager *DS, int serverID, int traffic) {
-    return FAILURE_DSM;
+	if (serverID <= 0 || traffic < 0 || DS == NULL)
+		return INVALID_INPUT_DSM;
+
+	Server *server = DS->servers->Find(serverID);
+	if (server == NULL)
+		return FAILURE_DSM;
+	int data_center = server->BelongsToDataCenter();
+	double key = traffic + (1 - 1 / serverID);
+	if (server->Traffic != 0){
+		DS->traffic_tree->Delete(key);
+		DS->data_centers->Find(data_center)->getData().getTrafficTree()->
+			Delete(key);
+	}
+	DS->traffic_tree->Insert(*server, key);
+	DS->data_centers->Find(data_center)->getData().getTrafficTree()->
+		Insert(*server, key);
+    return SUCCESS_DSM;
 }
 
 StatusTypeDSM
 DSManager::SumHighestTrafficServers(DSManager *DS, int dataCenterID, int k,
                                     int *traffic) {
-    return FAILURE_DSM;
+	if (k < 0 || DS == NULL || dataCenterID > DS->num_of_DS ||
+		dataCenterID < 0 || traffic == NULL)
+		return INVALID_INPUT_DSM;
+	if (dataCenterID == 0)
+		*traffic = DS->traffic_tree->GetKHighestSum(k);
+	else
+		*traffic = DS->data_centers->Find(dataCenterID)->
+			getData().getTrafficTree()->GetKHighestSum(k);
+    return SUCCESS_DSM;
 }
 
 void DSManager::Quit(DSManager **DS) {
-
+	delete DS;
 }
 
