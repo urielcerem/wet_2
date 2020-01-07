@@ -1,13 +1,13 @@
 /***************************************************************************/
 /*                                                                         */
 /* 234218 Data DSs 1, Winter 2019-2020                                     */
-/* Homework : Wet 1                                                        */
+/* Homework : Wet 2                                                        */
 /*                                                                         */
 /***************************************************************************/
 
 /***************************************************************************/
 /*                                                                         */
-/* File Name : main1.cpp                                                   */
+/* File Name : main2.cpp                                                   */
 /*                                                                         */
 /* Holds the "int main()" function and the parser of the shell's           */
 /* command line.                                                           */
@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "library1.h"
+#include "library2.h"
 
 #ifdef __cplusplus
 extern "C" {
