@@ -7,10 +7,10 @@
 #include "Array.h"
 
 typedef enum {
-    SUCCESS = 0,
-    FAILURE = -1,
-    ALLOCATION_ERROR = -2,
-    INVALID_INPUT = -3
+    SUCCESS_UFC = 0,
+    FAILURE_UFC = -1,
+    ALLOCATION_ERROR_UFC = -2,
+    INVALID_INPUT_UFC = -3
 } StatusTypeUFSet;
 
 template <class T>
@@ -23,6 +23,12 @@ class UFSetNode{
 public:
     explicit UFSetNode(int Id, T data, T* parent = NULL, int NumOfNodes = 1) :Id(Id), data(data), parent(parent), NumOfNodes(NumOfNodes) {}
     ~UFSetNode() = default;
+    int & getID () {
+        return &Id;
+    }
+    T & getData (){
+        return & data;
+    }
 };
 
 template <class T>
