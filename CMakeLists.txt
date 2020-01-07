@@ -4,6 +4,6 @@ project(wet_1)
 set(CMAKE_CXX_STANDARD 11)
 
 add_executable(wet_2 main2.cpp library2.h
-        Array.h list.h AVL.h Union-Find.h hash_table.h
+        Array.h AVL.h Union-Find.h hash_table.h
         DataCenterAndServer2.cpp DataCenterAndServer2.h
         DataStructureManager.h DataStructureManager.cpp)
