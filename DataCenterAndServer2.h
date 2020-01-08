@@ -5,6 +5,7 @@
 #include "Array.h"
 #include "AVL.h"
 
+
 typedef enum {
 	SUCCESS_DC = 0,
 	FAILURE_DC = -1,
@@ -36,7 +37,10 @@ class DataCenter {
 	int num_of_servers;
 	AVLTree <Server> trafficTree;
 public:
-	DataCenter(): num_of_servers(0), trafficTree(AVLTree<Server>()){};
+	DataCenter() {
+	    num_of_servers = 0;
+	    trafficTree = *(new AVLTree<Server>);
+	}
 	~DataCenter() = default;
 	DataCenter(DataCenter & DC) = default;
 	int & NumOfServers();

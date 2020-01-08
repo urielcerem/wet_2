@@ -49,11 +49,12 @@ StatusTypeDSM
 DSManager::AddServer(DSManager *DS, int dataCenterID, int serverID) {
     if (DS == NULL || !isValidDCID(dataCenterID, (*DS).num_of_DS) || (serverID <=0))
         return INVALID_INPUT_DSM;
-    Server new_server(serverID, dataCenterID);
-    if (&new_server == NULL)
-        return ALLOCATION_ERROR_DSM;
     if (servers->Find(serverID) != NULL)
         return FAILURE_DSM;
+    Server new_server(serverID, dataCenterID);
+    if (&new_server == NULL) {
+        return ALLOCATION_ERROR_DSM;
+    }
     switch ((StatusTypeDSM)servers->Insert(serverID, &new_server)){
         case FAILURE_DSM:
             return FAILURE_DSM;
@@ -65,20 +66,21 @@ DSManager::AddServer(DSManager *DS, int dataCenterID, int serverID) {
             break;
     }
     ++num_of_server;
-    return (StatusTypeDSM)data_centers->Find(serverID)->getData()->AddServer();
+    return (StatusTypeDSM)data_centers->Find(dataCenterID)->getData()->AddServer();
 }
 
 StatusTypeDSM DSManager::RemoveServer(DSManager *DS, int serverID) {
     if (DS == NULL ||  (serverID <=0))
         return INVALID_INPUT_DSM;
     Server* to_remove = servers->Find(serverID);
+    int data_center_id = to_remove->BelongsToDataCenter();
     int traffic = to_remove->Traffic();
     if (to_remove == NULL)
         return FAILURE_DSM;
     traffic_tree->Delete(traffic + (1 - (1 / serverID)));
-    data_centers->Find(serverID)->getData()->getTrafficTree()->Delete(traffic + (1 - (1 / serverID)));
+    data_centers->Find(data_center_id)->getData()->getTrafficTree()->Delete(traffic + (1 - (1 / serverID)));
     return (((StatusTypeDSM)servers->Remove(serverID)==SUCCESS_DSM) &&
-            ((StatusTypeDSM)data_centers->Find(serverID)->getData()->RemoveServer() == SUCCESS_DSM))
+            ((StatusTypeDSM)data_centers->Find(data_center_id)->getData()->RemoveServer() == SUCCESS_DSM))
             ? SUCCESS_DSM: FAILURE_DSM;
 }
 

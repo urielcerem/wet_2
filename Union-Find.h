@@ -21,7 +21,10 @@ public:
     UFSetNode <T> * parent;
     int NumOfNodes;
 
-    explicit UFSetNode(int Id, T data/*, T* parent = NULL, int NumOfNodes = 1*/) :Id(Id), data(data), parent(NULL), NumOfNodes(1) {}
+    explicit UFSetNode(int Id, T data) :Id(Id), data(data){
+        parent = NULL;
+        NumOfNodes = 1;
+    }
     ~UFSetNode() = default;
     int getID () {
         return Id;
@@ -50,9 +53,9 @@ public:
 
     /**--Find with path compression---**/
     UFSetNode <T> * Find (int i){
-        UFSetNode <T> * root = array[i];
-        UFSetNode <T> * connect_to_Root = array[i];
-        while (root != NULL)
+        UFSetNode <T> * root = array[i-1];
+        UFSetNode <T> * connect_to_Root = array[i-1];
+        while (root->parent != NULL)
             root = root->parent;
         while (connect_to_Root->parent != root) {
             UFSetNode <T> * next = connect_to_Root->parent;
