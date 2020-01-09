@@ -32,7 +32,7 @@ SumHighestTrafficServers(void *DS, int dataCenterID, int k, int *traffic) {
 }
 
 void Quit(void **DS) {
-    delete ((DSManager*)(*DS));
-    *DS = NULL;
+	delete ((DSManager*)(*DS));
+	*DS = NULL;
 }
 

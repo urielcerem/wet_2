@@ -38,10 +38,12 @@ public:
 
 class DataCenter {
 	int num_of_servers;
-	AVLTree <Server> trafficTree;
+	AVLTree <Server>* trafficTree;
 public:
 	DataCenter();
-	~DataCenter()= default;
+	~DataCenter() {
+		delete trafficTree;
+	}
 	DataCenter(DataCenter & DC) = default;
 	int & NumOfServers();
     AVLTree <Server>* getTrafficTree();

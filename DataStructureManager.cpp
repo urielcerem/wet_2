@@ -4,6 +4,17 @@
 #include "DataCenterAndServer2.h"
 #include "DataStructureManager.h"
 
+#ifdef _DEBUG
+#define DEBUG_CLIENTBLOCK new( _CLIENT_BLOCK, __FILE__, __LINE__)
+#else
+#define DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
+#ifdef _DEBUG
+#define new DEBUG_CLIENTBLOCK
+#endif
+
+
 
 DSManager::DSManager(int numOfDS): num_of_DS(numOfDS), num_of_server(0){
     servers = new HASH_TABLE <Server>;
@@ -144,4 +155,3 @@ DSManager::SumHighestTrafficServers(DSManager *DS, int dataCenterID, int k,
 	return SUCCESS_DSM;
 
 }
-

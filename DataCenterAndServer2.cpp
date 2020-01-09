@@ -33,7 +33,7 @@ StatusTypeDC Server::updateDataCenter(int Id) {
 /**---DataCenter Functions---**/
 DataCenter::DataCenter() {
     num_of_servers = 0;
-    trafficTree = *(new AVLTree<Server>);
+    trafficTree = new AVLTree<Server>;
 }
 
 /*DataCenter::~DataCenter() {
@@ -46,7 +46,7 @@ int &DataCenter::NumOfServers() {
 
 
 AVLTree <Server>*DataCenter::getTrafficTree() {
-    return &trafficTree;
+    return trafficTree;
 }
 
 StatusTypeDC DataCenter::AddServer() {

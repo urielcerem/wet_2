@@ -2,6 +2,18 @@
 #define WET_1_HASH_TABLE_H
 #include <math.h>
 
+
+#ifdef _DEBUG
+#define DEBUG_CLIENTBLOCK new( _CLIENT_BLOCK, __FILE__, __LINE__)
+#else
+#define DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
+#ifdef _DEBUG
+#define new DEBUG_CLIENTBLOCK
+#endif
+
+
 typedef enum {
 	SUCCESS_HT = 0,
 	FAILURE_HT = -1,
@@ -11,7 +23,7 @@ typedef enum {
 typedef enum {
 	INCREASE = 1,
 	DECREASE = 2,
-	ORIGINAL_SIZE = 100
+	ORIGINAL_SIZE = 1
 }TableSizeFunc;
 
 
@@ -25,7 +37,9 @@ public:
 	HTNode <T> * prev;
 	explicit HTNode(T* data,int key, HTNode <T> * next = NULL, 
 		HTNode <T> * prev = NULL) : data(data), key(key), next(next), prev(prev) {}
-	~HTNode() = default;
+	~HTNode() {
+		delete data;
+	}
 
 };
 
@@ -38,7 +52,7 @@ class HASH_TABLE {
 	int ratio;
 	HTNode<T> ** table;
 public:
-	explicit HASH_TABLE() : size_of_table(ORIGINAL_SIZE), num_of_items(0), ratio(10) {
+	explicit HASH_TABLE() : size_of_table(ORIGINAL_SIZE), num_of_items(0), ratio(2) {
 		table = new HTNode<T>*[size_of_table];
 		for (int i = 0; i < size_of_table; i++) {
 			table[i] = NULL;
@@ -136,6 +150,7 @@ StatusTypeHashTable HASH_TABLE<T>::ChangeTableSize(TableSizeFunc func) {
 		while (curr_node) {
 			temp_node = (*curr_node).next;
 			item = (*curr_node).data;
+			(*curr_node).data = NULL;
 			key = (*curr_node).key;
 			delete curr_node;
 			curr_node = temp_node;

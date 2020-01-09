@@ -31,6 +31,7 @@ public:
     StatusTypeDSM RemoveServer(DSManager *DS, int serverID);
     StatusTypeDSM SetTraffic(DSManager *DS, int serverID, int traffic);
     StatusTypeDSM SumHighestTrafficServers(DSManager *DS, int dataCenterID, int k, int *traffic);
+	void Quit(DSManager *DS);
 };
 
 #endif //WET_1_DATASTRUCTUREMANAGER_H
