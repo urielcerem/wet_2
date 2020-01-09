@@ -4,7 +4,6 @@
 
 #ifndef WET_1_UNION_FIND_H
 #define WET_1_UNION_FIND_H
-#include "Array.h"
 
 typedef enum {
     SUCCESS_UFC = 0,

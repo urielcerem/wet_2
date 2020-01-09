@@ -158,22 +158,22 @@ AVLNode<T>* InsertDataByKey(AVLNode<T>* node, T data, double key, int* not_inser
 	}
 	AVLNode<T>* temp_node;
 	if (key < node->key) {
-		node->left_sum += key;
+		node->left_sum += (int)key;
 		node->num_of_left++;
 		temp_node = InsertDataByKey(node->left, data, key, not_inserted);
 		if (*not_inserted) {
 			node->num_of_left--;
-			node->left_sum -= key;
+			node->left_sum -= (int)key;
 		}
 		node->left = temp_node;
 	}
 	else if (key > node->key) {
-		node->right_sum += key;
+		node->right_sum += (int)key;
 		node->num_of_right++;
 		temp_node = InsertDataByKey(node->right, data, key, not_inserted);
 		if (*not_inserted) {
 			node->num_of_right--;
-			node->right_sum -= key;
+			node->right_sum -= (int)key;
 		}
 		node->right = temp_node;
 	}
@@ -236,22 +236,22 @@ AVLNode<T>* deleteNode(AVLNode<T>* root, double key, int* not_deleted)
 
 	AVLNode<T>* temp_node;
 	if (key < root->key) {
-		root->left_sum -= key;
+		root->left_sum -= (int)key;
 		root->num_of_left--;
 		temp_node = deleteNode(root->left, key, not_deleted);
 		if (*not_deleted) {
 			root->num_of_left++;
-			root->left_sum += key;
+			root->left_sum += (int)key;
 		}
 		root->left = temp_node;
 	}
 	else if (key > root->key) {
-		root->right_sum -= key;
+		root->right_sum -= (int)key;
 		root->num_of_right--;
 		temp_node = deleteNode(root->right, key, not_deleted);
 		if (*not_deleted) {
 			root->num_of_right++;
-			root->right_sum += key;
+			root->right_sum += (int)key;
 		}
 		root->right = temp_node;
 	}
@@ -280,7 +280,7 @@ AVLNode<T>* deleteNode(AVLNode<T>* root, double key, int* not_deleted)
 			AVLNode<T>* temp = getNextMinValue(root);
 
 			root->num_of_right--;
-			root->right_sum -= temp->key;
+			root->right_sum -= (int)temp->key;
 
 			root->key = temp->key;
 			root->data = temp->data;
@@ -403,6 +403,7 @@ void inOrder(AVLNode<T> *root, AVLNode<T> *node)
 			" right num = " << node->num_of_right << " rank = "
 			<< Rank(root, node->key) << " reverse rank = "
 			<< ReverseRank(root, node->key) << std::endl;
+		cout << "item info :   " << node->data << endl;
 		inOrder(root, node->right);
 	}
 }
@@ -457,7 +458,8 @@ AVLNode<T>* AVLTree<T>::GetKHighestNde(int k) {
 
 
 template <class T>
-void GetKSum(AVLNode<T>* node, int key , int* sum) {
+void GetKSum(AVLNode<T>* node, double key , int* sum) {
+	//cout << node->key << "    " << *sum << endl;
 	if (node->key < key)
 		GetKSum(node->right, key, sum);
 	else if (node->key > key) {
@@ -475,6 +477,8 @@ int AVLTree<T>::GetKHighestSum(int k) {
 		return 0;
 	int sum = 0;
 	AVLNode<T>* k_node = GetKHighestNde(k);
+	//cout << k_node->key << endl;
+	//cout << root->key << endl;
 	if (k_node == NULL)
 		sum = root->right_sum + root->left_sum + root->key;
 	else
