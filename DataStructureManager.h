@@ -4,7 +4,6 @@
 
 #ifndef WET_1_DATASTRUCTUREMANAGER_H
 #define WET_1_DATASTRUCTUREMANAGER_H
-#include "Array.h"
 #include "AVL.h"
 #include "hash_table.h"
 #include "Union-Find.h"

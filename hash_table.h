@@ -1,6 +1,5 @@
 #ifndef WET_1_HASH_TABLE_H
 #define WET_1_HASH_TABLE_H
-#include "Array.h"
 #include <math.h>
 
 typedef enum {
@@ -153,8 +152,8 @@ StatusTypeHashTable HASH_TABLE<T>::ChangeTableSize(TableSizeFunc func) {
 template <class T>
 T* HASH_TABLE<T>::Find(int key) {
 	int modified_key = Shuffling_func(key);
-	std::cout << key << "  " << modified_key << std::endl;
-	if (table[modified_key] == nullptr) {
+	//std::cout << key << "  " << modified_key << std::endl;
+	if (table[modified_key] == NULL) {
 		return NULL;
 	}
 	else {

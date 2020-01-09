@@ -2,7 +2,6 @@
 #ifndef WET_1_DATACENTER_SERVER_H
 #define WET_1_DATACENTER_SERVER_H
 
-#include "Array.h"
 #include "AVL.h"
 #include <iostream>
 using namespace std;
