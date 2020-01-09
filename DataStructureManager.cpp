@@ -11,9 +11,12 @@ DSManager::DSManager(int numOfDS): num_of_DS(numOfDS), num_of_server(0){
     traffic_tree = new AVLTree <Server>;
 }
 
-/**DSManager *DSManager::Init(int num) {
-    return new DSManager(num);
-}**/
+
+DSManager::~DSManager() {
+    delete servers;
+    delete data_centers;
+    delete traffic_tree;
+}
 
 static bool isValidDCID(int Id, int numOfDC){
 	return ((Id > 0) && (Id <= numOfDC));
@@ -139,10 +142,6 @@ DSManager::SumHighestTrafficServers(DSManager *DS, int dataCenterID, int k,
 			getData()->getTrafficTree()->GetKHighestSum(k);
 	}
 	return SUCCESS_DSM;
-	
-}
 
-/**void DSManager::Quit(DSManager **DS) {
-	delete DS;
-}**/
+}
 

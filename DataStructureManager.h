@@ -25,14 +25,12 @@ class DSManager {
 
 public:
     explicit DSManager(int numOfDS);
-    ~DSManager() = default;
- //   DSManager * Init(int num);
+    ~DSManager();//= default;
     StatusTypeDSM MergeDataCenters(DSManager *DS, int dataCenter1, int dataCenter2);
     StatusTypeDSM AddServer(DSManager *DS, int dataCenterID, int serverID);
     StatusTypeDSM RemoveServer(DSManager *DS, int serverID);
     StatusTypeDSM SetTraffic(DSManager *DS, int serverID, int traffic);
     StatusTypeDSM SumHighestTrafficServers(DSManager *DS, int dataCenterID, int k, int *traffic);
- //   void Quit(DSManager **DS);
 };
 
 #endif //WET_1_DATASTRUCTUREMANAGER_H

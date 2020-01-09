@@ -55,7 +55,7 @@ private:
 };
 
 template <class T>
-HASH_TABLE<T>::~HASH_TABLE() {
+HASH_TABLE<T>::~HASH_TABLE()/*= default;*/ {
 	HTNode<T> *curr_node, *temp_node;
 	for (int j = 0; j < size_of_table; j++) {
 		curr_node = table[j];

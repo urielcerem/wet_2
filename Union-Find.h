@@ -47,7 +47,11 @@ public:
             array[i] = new UFSetNode <T> (i + 1, *(new T));
         }
     }
-    ~UnionFindSet () = default;
+    ~UnionFindSet () {
+        for (int i = 0; i <NumOfObjects ; ++i)
+            delete array[i];
+        delete [] array;
+    }
 
     /**--Find with path compression---**/
     UFSetNode <T> * Find (int i){

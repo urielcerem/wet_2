@@ -52,7 +52,7 @@ void DeleteTree(AVLNode<T> *root)
 	{
 		DeleteTree(root->left);
 		DeleteTree(root->right);
-		delete(root);
+		delete root;
 	}
 }
 
