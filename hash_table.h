@@ -12,7 +12,7 @@ typedef enum {
 typedef enum {
 	INCREASE = 1,
 	DECREASE = 2,
-	ORIGINAL_SIZE = 10
+	ORIGINAL_SIZE = 100
 }TableSizeFunc;
 
 
@@ -153,6 +153,7 @@ StatusTypeHashTable HASH_TABLE<T>::ChangeTableSize(TableSizeFunc func) {
 template <class T>
 T* HASH_TABLE<T>::Find(int key) {
 	int modified_key = Shuffling_func(key);
+	std::cout << key << "  " << modified_key << std::endl;
 	if (table[modified_key] == nullptr) {
 		return NULL;
 	}

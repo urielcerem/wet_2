@@ -49,3 +49,7 @@ StatusTypeDC DataCenter::RemoveServer() {
     return SUCCESS_DC;
 }
 
+ostream & operator << (ostream& out, const Server &s) {
+	out << "  id = " << s.id << "    parentd id = " << s.DCParentId << "    traffic = " << s.traffic;
+	return out;
+}
