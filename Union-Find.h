@@ -45,8 +45,7 @@ public:
     explicit UnionFindSet (int NumOfObjects): NumOfObjects(NumOfObjects) {
         array = new UFSetNode<T>*[NumOfObjects];
         for (int i = 0; i <NumOfObjects ; ++i) {
-            UFSetNode <T> node(i+1 ,*(new T));
-            array[i] = &node;
+            array[i] = new UFSetNode <T> (i + 1, *(new T));
         }
     }
     ~UnionFindSet () = default;
@@ -55,28 +54,36 @@ public:
     UFSetNode <T> * Find (int i){
         UFSetNode <T> * root = array[i-1];
         UFSetNode <T> * connect_to_Root = array[i-1];
+		//std::cout << root << std::endl;
+		//std::cout << connect_to_Root << std::endl;
+		UFSetNode <T> * next;
         while (root->parent != NULL)
             root = root->parent;
-        while (connect_to_Root->parent != root) {
+        while (connect_to_Root != root && connect_to_Root->parent != root) {
             UFSetNode <T> * next = connect_to_Root->parent;
             connect_to_Root->parent = root;
             connect_to_Root = next;
         }
         return  root;
     }
+
     /**--Union by size---**/
-    UFSetNode <T> *Union (int i, int j) {
-        UFSetNode <T> * root1 = array[i];
-        UFSetNode <T> * root2 = array[j];
+	UFSetNode <T> *Union (int i, int j) {
+		UFSetNode <T> * root1 = array[i - 1];
+		UFSetNode <T> * root2 = array[j - 1];
         if (root1->NumOfNodes <= root2->NumOfNodes){
             root2->NumOfNodes += root1->NumOfNodes;
             root1->parent = root2;
             root1->NumOfNodes = -1;
+			//array[i] = root2;
+			return root2;
         }
         else{
             root1->NumOfNodes += root2->NumOfNodes;
             root2->parent = root1;
             root2->NumOfNodes = -1;
+			//array[j] = root1;
+			return root1;
         }
     }
 };

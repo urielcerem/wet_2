@@ -429,6 +429,7 @@ T* AVLTree<T>::Find(double key) {
 
 template <class T>
 void AVLTree<T>::PrintInOrder() {
+	cout << "printing tree:         " << endl;
 	inOrder(root, root);
 }
 
@@ -470,6 +471,8 @@ void GetKSum(AVLNode<T>* node, int key , int* sum) {
 
 template <class T>
 int AVLTree<T>::GetKHighestSum(int k) {
+	if (root == NULL)
+		return 0;
 	int sum = 0;
 	AVLNode<T>* k_node = GetKHighestNde(k);
 	if (k_node == NULL)

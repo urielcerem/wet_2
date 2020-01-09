@@ -4,7 +4,8 @@
 
 #include "Array.h"
 #include "AVL.h"
-
+#include <iostream>
+using namespace std;
 
 typedef enum {
 	SUCCESS_DC = 0,
@@ -31,7 +32,10 @@ public:
     int & BelongsToDataCenter();
 	StatusTypeDC updateTraffic(int new_traffic);
 	StatusTypeDC updateDataCenter(int Id);
+
+	friend ostream & operator << (ostream& out, const Server &s);
 };
+
 
 class DataCenter {
 	int num_of_servers;

@@ -183,7 +183,7 @@ static errorType OnInit(void** DS, const char* const command) {
     };
     isInit = true;
     int numOfDataCenters;
-    ValidateRead(sscanf(command, "%d", &numOfDataCenters), 1, "%s failed.\n", commandStr[INIT_CMD]);
+    ValidateRead(sscanf_s(command, "%d", &numOfDataCenters), 1, "%s failed.\n", commandStr[INIT_CMD]);
     *DS = Init(numOfDataCenters);
 
     if (*DS == NULL) {
@@ -197,7 +197,7 @@ static errorType OnInit(void** DS, const char* const command) {
 
 static errorType OnMergeDataCenters(void* DS, const char* const command) {
     int dataCenter1, dataCenter2;
-    ValidateRead(sscanf(command, "%d %d", &dataCenter1, &dataCenter2), 2, "%s failed.\n", commandStr[MERGEDATACENTERS_CMD]);
+    ValidateRead(sscanf_s(command, "%d %d", &dataCenter1, &dataCenter2), 2, "%s failed.\n", commandStr[MERGEDATACENTERS_CMD]);
     StatusType res = MergeDataCenters(DS, dataCenter1, dataCenter2);
 
     if (res != SUCCESS) {
@@ -211,7 +211,7 @@ static errorType OnMergeDataCenters(void* DS, const char* const command) {
 
 static errorType OnAddServer(void* DS, const char* const command) {
     int dataCenterID,serverID;
-    ValidateRead(sscanf(command, "%d %d", &dataCenterID, &serverID), 2, "%s failed.\n", commandStr[ADDSERVER_CMD]);
+    ValidateRead(sscanf_s(command, "%d %d", &dataCenterID, &serverID), 2, "%s failed.\n", commandStr[ADDSERVER_CMD]);
     StatusType res = AddServer(DS, dataCenterID, serverID);
 
     if (res != SUCCESS) {
@@ -225,7 +225,7 @@ static errorType OnAddServer(void* DS, const char* const command) {
 
 static errorType OnRemoveServer(void* DS, const char* const command) {
     int serverID;
-    ValidateRead(sscanf(command, "%d", &serverID), 1, "%s failed.\n", commandStr[REMOVESERVER_CMD]);
+    ValidateRead(sscanf_s(command, "%d", &serverID), 1, "%s failed.\n", commandStr[REMOVESERVER_CMD]);
     StatusType res = RemoveServer(DS, serverID);
 
     if (res != SUCCESS) {
@@ -239,7 +239,7 @@ static errorType OnRemoveServer(void* DS, const char* const command) {
 
 static errorType OnSetTraffic(void* DS, const char* const command) {
     int serverID, traffic;
-    ValidateRead(sscanf(command, "%d %d", &serverID, &traffic), 2, "%s failed.\n", commandStr[SETTRAFFIC_CMD]);
+    ValidateRead(sscanf_s(command, "%d %d", &serverID, &traffic), 2, "%s failed.\n", commandStr[SETTRAFFIC_CMD]);
     StatusType res = SetTraffic(DS, serverID, traffic);
 
     if (res != SUCCESS) {
@@ -253,7 +253,7 @@ static errorType OnSetTraffic(void* DS, const char* const command) {
 
 static errorType OnSumHighestTrafficServers(void* DS, const char* const command) {
     int dataCenterID, k, traffic;
-    ValidateRead(sscanf(command, "%d %d", &dataCenterID, &k), 2, "%s failed.\n", commandStr[SUMHIGHEST_CMD]);
+    ValidateRead(sscanf_s(command, "%d %d", &dataCenterID, &k), 2, "%s failed.\n", commandStr[SUMHIGHEST_CMD]);
     StatusType res = SumHighestTrafficServers(DS, dataCenterID, k, &traffic);
 
     if (res != SUCCESS) {
