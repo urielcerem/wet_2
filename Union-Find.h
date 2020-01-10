@@ -5,6 +5,21 @@
 #ifndef WET_1_UNION_FIND_H
 #define WET_1_UNION_FIND_H
 
+
+
+#ifdef _DEBUG
+#define DEBUG_CLIENTBLOCK new( _CLIENT_BLOCK, __FILE__, __LINE__)
+#else
+#define DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
+#ifdef _DEBUG
+#define new DEBUG_CLIENTBLOCK
+#endif
+
+
+
+
 typedef enum {
     SUCCESS_UFC = 0,
     FAILURE_UFC = -1,
@@ -15,21 +30,23 @@ typedef enum {
 template <class T>
 class UFSetNode{
     int Id;
-    T data;
+    T* data;
 public:
     UFSetNode <T> * parent;
     int NumOfNodes;
 
-    explicit UFSetNode(int Id, T data) :Id(Id), data(data){
+    explicit UFSetNode(int Id, T* data) :Id(Id), data(data){
         parent = NULL;
         NumOfNodes = 1;
     }
-    ~UFSetNode() = default;
+	~UFSetNode() {
+		delete data;
+	}
     int getID () {
         return Id;
     }
     T * getData (){
-        return & data;
+        return data;
     }
 
 };
@@ -44,10 +61,14 @@ public:
     explicit UnionFindSet (int NumOfObjects): NumOfObjects(NumOfObjects) {
         array = new UFSetNode<T>*[NumOfObjects];
         for (int i = 0; i <NumOfObjects ; ++i) {
-            array[i] = new UFSetNode <T> (i + 1, *(new T));
+            array[i] = new UFSetNode <T> (i + 1, (new T));
         }
     }
-    ~UnionFindSet () = default;
+    ~UnionFindSet () {
+        for (int i = 0; i <NumOfObjects ; ++i)
+            delete array[i];
+        delete [] array;
+    }
 
     /**--Find with path compression---**/
     UFSetNode <T> * Find (int i){

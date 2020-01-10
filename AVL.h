@@ -2,6 +2,18 @@
 #define AVL_TREE_H_
 #include<iostream>
 
+#ifdef _DEBUG
+#define DEBUG_CLIENTBLOCK new( _CLIENT_BLOCK, __FILE__, __LINE__)
+#else
+#define DEBUG_CLIENTBLOCK
+#endif // _DEBUG
+
+#ifdef _DEBUG
+#define new DEBUG_CLIENTBLOCK
+#endif
+
+
+
 /* AVL node */
 template <class T>
 class AVLNode {
@@ -52,7 +64,7 @@ void DeleteTree(AVLNode<T> *root)
 	{
 		DeleteTree(root->left);
 		DeleteTree(root->right);
-		delete(root);
+		delete root;
 	}
 }
 
