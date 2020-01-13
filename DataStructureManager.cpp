@@ -35,7 +35,7 @@ static bool isValidDCID(int Id, int numOfDC){
 
 StatusTypeDSM
 DSManager::MergeDataCenters(DSManager *DS, int dataCenter1, int dataCenter2) {
-    if (DS == NULL || !isValidDCID(dataCenter1, (*DS).num_of_DS) || !isValidDCID(dataCenter2,(*DS).num_of_DS))
+    if (DS == nullptr || !isValidDCID(dataCenter1, (*DS).num_of_DS) || !isValidDCID(dataCenter2,(*DS).num_of_DS))
         return INVALID_INPUT_DSM;
     int root1 = (*DS).data_centers->Find(dataCenter1)->getID();
     int root2 = (*DS).data_centers->Find(dataCenter2)->getID();
@@ -52,13 +52,13 @@ DSManager::MergeDataCenters(DSManager *DS, int dataCenter1, int dataCenter2) {
 	//cout << head1->NumOfServers() << endl;
 	//cout << head2->NumOfServers() << endl;
     if (new_root == root1) {
-        while (head2->getTrafficTree()->root != NULL) {
+        while (head2->getTrafficTree()->root != nullptr) {
 			(*head1).getTrafficTree()->Insert((*head2).getTrafficTree()->root->data, (*head2).getTrafficTree()->root->key);
             (*head2).getTrafficTree()->Delete((*head2).getTrafficTree()->root->key);
         }
     }
     else {
-		while (head1->getTrafficTree()->root != NULL) {
+		while (head1->getTrafficTree()->root != nullptr) {
 			    (*head2).getTrafficTree()->Insert((*head1).getTrafficTree()->root->data, (*head1).getTrafficTree()->root->key);
                 (*head1).getTrafficTree()->Delete((*head1).getTrafficTree()->root->key);
         }
@@ -69,12 +69,12 @@ DSManager::MergeDataCenters(DSManager *DS, int dataCenter1, int dataCenter2) {
 
 StatusTypeDSM
 DSManager::AddServer(DSManager *DS, int dataCenterID, int serverID) {
-    if (DS == NULL || !isValidDCID(dataCenterID, (*DS).num_of_DS) || (serverID <=0))
+    if (DS == nullptr || !isValidDCID(dataCenterID, (*DS).num_of_DS) || (serverID <=0))
         return INVALID_INPUT_DSM;
-    if (servers->Find(serverID) != NULL)
+    if (servers->Find(serverID) != nullptr)
         return FAILURE_DSM;
 	Server* new_server = new Server(serverID, dataCenterID);
-    if (&new_server == NULL) {
+    if (&new_server == nullptr) {
         return ALLOCATION_ERROR_DSM;
     }
 	switch (servers->Insert(serverID, new_server)){
@@ -91,15 +91,15 @@ DSManager::AddServer(DSManager *DS, int dataCenterID, int serverID) {
 }
 
 StatusTypeDSM DSManager::RemoveServer(DSManager *DS, int serverID) {
-    if (DS == NULL ||  (serverID <=0))
+    if (DS == nullptr ||  (serverID <=0))
         return INVALID_INPUT_DSM;
     Server* to_remove = servers->Find(serverID);
-	if (to_remove == NULL)
+	if (to_remove == nullptr)
 		return FAILURE_DSM;
 	//cout << to_remove;
     int data_center_id = to_remove->BelongsToDataCenter();
     int traffic = to_remove->Traffic();
-    if (to_remove == NULL)
+    if (to_remove == nullptr)
         return FAILURE_DSM;
     traffic_tree->Delete((double)traffic + (double)(1 / ((double)serverID * 2)));
     data_centers->Find(data_center_id)->getData()->getTrafficTree()->Delete((double)traffic + (double)(1 / ((double)serverID * 2)));
@@ -110,11 +110,11 @@ StatusTypeDSM DSManager::RemoveServer(DSManager *DS, int serverID) {
 }
 
 StatusTypeDSM DSManager::SetTraffic(DSManager *DS, int serverID, int traffic) {
-	if (serverID <= 0 || traffic < 0 || DS == NULL)
+	if (serverID <= 0 || traffic < 0 || DS == nullptr)
 		return INVALID_INPUT_DSM;
 	//DS->servers->PrintTable();
 	Server *server = DS->servers->Find(serverID);
-	if (server == NULL)
+	if (server == nullptr)
 		return FAILURE_DSM;
 	//cout << (*server).ID() << "   " << (*server).Traffic() << endl;
 	int data_center = server->BelongsToDataCenter();
@@ -140,8 +140,8 @@ StatusTypeDSM DSManager::SetTraffic(DSManager *DS, int serverID, int traffic) {
 StatusTypeDSM
 DSManager::SumHighestTrafficServers(DSManager *DS, int dataCenterID, int k,
                                     int *traffic) {
-	if (k < 0 || DS == NULL || dataCenterID > DS->num_of_DS ||
-		dataCenterID < 0 || traffic == NULL)
+	if (k < 0 || DS == nullptr || dataCenterID > DS->num_of_DS ||
+		dataCenterID < 0 || traffic == nullptr)
 		return INVALID_INPUT_DSM;
 	//DS->servers->PrintTable();
 	//DS->traffic_tree->PrintInOrder();

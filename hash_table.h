@@ -35,8 +35,8 @@ public:
 	int key;
 	HTNode <T> * next;
 	HTNode <T> * prev;
-	explicit HTNode(T* data,int key, HTNode <T> * next = NULL, 
-		HTNode <T> * prev = NULL) : data(data), key(key), next(next), prev(prev) {}
+	explicit HTNode(T* data,int key, HTNode <T> * next = nullptr, 
+		HTNode <T> * prev = nullptr) : data(data), key(key), next(next), prev(prev) {}
 	~HTNode() {
 		delete data;
 	}
@@ -55,14 +55,14 @@ public:
 	explicit HASH_TABLE() : size_of_table(ORIGINAL_SIZE), num_of_items(0), ratio(2) {
 		table = new HTNode<T>*[size_of_table];
 		for (int i = 0; i < size_of_table; i++) {
-			table[i] = NULL;
+			table[i] = nullptr;
 		}
 	}
 	~HASH_TABLE();
 	StatusTypeHashTable Insert(int key,T* item);
 	T* Find(int key);
 	StatusTypeHashTable Remove(int key);
-	void PrintTable();//for debugging purpuses
+	//void PrintTable();//for debugging purpuses
 private:
 	int Shuffling_func(int key);
 	StatusTypeHashTable ChangeTableSize(TableSizeFunc func);
@@ -139,7 +139,7 @@ StatusTypeHashTable HASH_TABLE<T>::ChangeTableSize(TableSizeFunc func) {
 		return ALLOCATION_ERROR_HT;
 	num_of_items = 0;
 	for (int i = 0; i < size_of_table; i++) {
-		table[i] = NULL;
+		table[i] = nullptr;
 	}
 	HTNode<T> *curr_node, *temp_node;
 	T* item;
@@ -150,7 +150,7 @@ StatusTypeHashTable HASH_TABLE<T>::ChangeTableSize(TableSizeFunc func) {
 		while (curr_node) {
 			temp_node = (*curr_node).next;
 			item = (*curr_node).data;
-			(*curr_node).data = NULL;
+			(*curr_node).data = nullptr;
 			key = (*curr_node).key;
 			delete curr_node;
 			curr_node = temp_node;
@@ -163,13 +163,13 @@ StatusTypeHashTable HASH_TABLE<T>::ChangeTableSize(TableSizeFunc func) {
 	return SUCCESS_HT;
 }
 
-//returns NULL if any error accured//
+//returns nullptr if any error accured//
 template <class T>
 T* HASH_TABLE<T>::Find(int key) {
 	int modified_key = Shuffling_func(key);
 	//std::cout << key << "  " << modified_key << std::endl;
-	if (table[modified_key] == NULL) {
-		return NULL;
+	if (table[modified_key] == nullptr) {
+		return nullptr;
 	}
 	else {
 		HTNode<T> *curr_node = table[modified_key];
@@ -182,7 +182,7 @@ T* HASH_TABLE<T>::Find(int key) {
 				return (*curr_node).data;
 			}
 		}
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -197,7 +197,7 @@ StatusTypeHashTable HASH_TABLE<T>::Remove(int key) {
 		HTNode<T> *curr_node = table[modified_key];
 		if ((*curr_node).key == key) {
 			if ((*curr_node).next)
-				(*curr_node).next->prev = NULL;
+				(*curr_node).next->prev = nullptr;
 			table[modified_key] = (*curr_node).next;
 			T* out_data = (*curr_node).data;
 			delete curr_node;
@@ -233,7 +233,7 @@ StatusTypeHashTable HASH_TABLE<T>::Remove(int key) {
 }
 
 
-
+/*
 template <class T>
 void HASH_TABLE<T>::PrintTable() {
 	HTNode<T> *curr_node, *temp_node;
@@ -251,6 +251,6 @@ void HASH_TABLE<T>::PrintTable() {
 	}
 	std::cout << "num of items = "<< num_of_items << std::endl;
 	std::cout << "size of table = " << size_of_table << std::endl;
-}
+}*/
 
 #endif

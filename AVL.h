@@ -26,7 +26,7 @@ public:
 	int depth;
 
 	AVLNode(T d, double k) : data(d), key(k), depth(1), num_of_left(0), 
-		num_of_right(0) ,left_sum(0), right_sum(0), left(NULL), right(NULL) {}
+		num_of_right(0) ,left_sum(0), right_sum(0), left(nullptr), right(nullptr) {}
 	~AVLNode() = default;
 };
 
@@ -38,7 +38,7 @@ class AVLTree {
 public:
 	AVLNode<T>* root;
 
-	AVLTree() : root(NULL) {}
+	AVLTree() : root(nullptr) {}
 	~AVLTree();
 
 	void Insert(T data, double key);
@@ -60,7 +60,7 @@ static int getMax(int first, int second) {
 template <class T>
 void DeleteTree(AVLNode<T> *root)
 {
-	if (root != NULL)
+	if (root != nullptr)
 	{
 		DeleteTree(root->left);
 		DeleteTree(root->right);
@@ -78,7 +78,7 @@ AVLTree<T>::~AVLTree()
 template <class T>
 int getDepth(AVLNode<T>* node)
 {
-	if (node == NULL)
+	if (node == nullptr)
 		return 0;
 	return node->depth;
 }
@@ -155,7 +155,7 @@ AVLNode<T>* RotateLeft(AVLNode<T>* node)
 template <class T>
 int getBalance(AVLNode<T>* node)
 {
-	if (node == NULL)
+	if (node == nullptr)
 		return 0;
 	return getDepth(node->left) - getDepth(node->right);
 }
@@ -163,7 +163,7 @@ int getBalance(AVLNode<T>* node)
 //Insert a key of type T into the AVL tree
 template <class T>
 AVLNode<T>* InsertDataByKey(AVLNode<T>* node, T data, double key, int* not_inserted) {
-	if (node == NULL)
+	if (node == nullptr)
 	{
 		AVLNode<T>* new_node = new AVLNode<T>(data, key);
 		return new_node;
@@ -232,7 +232,7 @@ AVLNode<T> * getNextMinValue(AVLNode<T>* node)
 	AVLNode<T>* current = node->right;
 
 	// find the leftmost leaf */
-	while (current->left != NULL)
+	while (current->left != nullptr)
 		current = current->left;
 	return current;
 }
@@ -241,7 +241,7 @@ AVLNode<T> * getNextMinValue(AVLNode<T>* node)
 template <class T>
 AVLNode<T>* deleteNode(AVLNode<T>* root, double key, int* not_deleted)
 {
-	if (root == NULL) {
+	if (root == nullptr) {
 		*not_deleted = 1;
 		return root;
 	}
@@ -271,17 +271,17 @@ AVLNode<T>* deleteNode(AVLNode<T>* root, double key, int* not_deleted)
 	else
 	{
 		// node with only one child or no child
-		if ((root->right == NULL) ||
-			(root->left == NULL))
+		if ((root->right == nullptr) ||
+			(root->left == nullptr))
 		{
 			AVLNode<T> *temp = root->left ?
 				root->left :
 				root->right;
 
-			if (temp == NULL)
+			if (temp == nullptr)
 			{
 				temp = root;
-				root = NULL;
+				root = nullptr;
 			}
 			else // One child case
 				*root = *temp;
@@ -302,7 +302,7 @@ AVLNode<T>* deleteNode(AVLNode<T>* root, double key, int* not_deleted)
 		}
 	}
 
-	if (root == NULL)
+	if (root == nullptr)
 		return root;
 
 	// update depth
@@ -337,7 +337,7 @@ AVLNode<T>* deleteNode(AVLNode<T>* root, double key, int* not_deleted)
 
 template <class T>
 AVLNode<T>* findKey(AVLNode<T>* root, double key) {
-	if (root == NULL)
+	if (root == nullptr)
 		return root;
 
 	if (key < root->key)
@@ -350,7 +350,7 @@ AVLNode<T>* findKey(AVLNode<T>* root, double key) {
 
 template <class T>
 void GetRank(AVLNode<T>* node, int key, int* rank) {
-	if (node != NULL)
+	if (node != nullptr)
 	{
 		if (node->key < key)
 		{
@@ -369,7 +369,7 @@ void GetRank(AVLNode<T>* node, int key, int* rank) {
 
 template <class T>
 void GetReverseRank(AVLNode<T>* node, int key, int* rank) {
-	if (node != NULL)
+	if (node != nullptr)
 	{
 		if (node->key > key)
 		{
@@ -407,7 +407,7 @@ template <class T>
 void inOrder(AVLNode<T> *root, AVLNode<T> *node)
 {
 
-	if (node != NULL)
+	if (node != nullptr)
 	{
 		inOrder(root, node->left);
 		cout << node->key << "  left sum = " << node->left_sum <<
@@ -449,8 +449,8 @@ void AVLTree<T>::PrintInOrder() {
 
 template <class T>
 AVLNode<T>* GetKNode(AVLNode<T>* node , int k) {
-	if (node == NULL)
-		return NULL;
+	if (node == nullptr)
+		return nullptr;
 	if (node->num_of_right > k)
 		return GetKNode(node->right, k);
 	else if (node->num_of_right < k) {
@@ -485,13 +485,13 @@ void GetKSum(AVLNode<T>* node, double key , int* sum) {
 
 template <class T>
 int AVLTree<T>::GetKHighestSum(int k) {
-	if (root == NULL)
+	if (root == nullptr)
 		return 0;
 	int sum = 0;
 	AVLNode<T>* k_node = GetKHighestNde(k);
 	//cout << k_node->key << endl;
 	//cout << root->key << endl;
-	if (k_node == NULL)
+	if (k_node == nullptr)
 		sum = root->right_sum + root->left_sum + root->key;
 	else
 		GetKSum(root, k_node->key, &sum);

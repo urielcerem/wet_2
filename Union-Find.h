@@ -36,7 +36,7 @@ public:
     int NumOfNodes;
 
     explicit UFSetNode(int Id, T* data) :Id(Id), data(data){
-        parent = NULL;
+        parent = nullptr;
         NumOfNodes = 1;
     }
 	~UFSetNode() {
@@ -77,7 +77,7 @@ public:
 		//std::cout << root << std::endl;
 		//std::cout << connect_to_Root << std::endl;
 		UFSetNode <T> * next;
-        while (root->parent != NULL)
+        while (root->parent != nullptr)
             root = root->parent;
         while (connect_to_Root != root && connect_to_Root->parent != root) {
             UFSetNode <T> * next = connect_to_Root->parent;
