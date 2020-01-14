@@ -1,7 +1,7 @@
 #ifndef AVL_TREE_H_
 #define AVL_TREE_H_
 #include<iostream>
-
+#include<math.h>
 
 /* AVL node */
 template <class T>
