@@ -24,8 +24,6 @@ public:
 		id(id), DCParentId(DCParentId), traffic(0) {}
 	~Server() = default;
 
-    //Server(const Server& s) = default;
-    //Server& operator=(const Server& s);
     int &ID();
 	int Traffic();
     int & BelongsToDataCenter();
@@ -38,8 +36,8 @@ public:
 
 class DataCenter {
 	int num_of_servers;
-	AVLTree <Server>* trafficTree;
 public:
+	AVLTree <Server>* trafficTree;
 	DataCenter();
 	~DataCenter() {
 		delete trafficTree;

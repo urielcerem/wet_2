@@ -25,7 +25,7 @@ public:
 	AVLNode *left, *right;
 	int depth;
 
-	AVLNode(T d, double k) : data(d), key(k), depth(1), num_of_left(0), 
+	AVLNode(T d , double k = 0) : data(d), key(k), depth(1), num_of_left(0), 
 		num_of_right(0) ,left_sum(0), right_sum(0), left(nullptr), right(nullptr) {}
 	~AVLNode() = default;
 };
@@ -51,6 +51,140 @@ public:
 };
 
 using namespace std;
+
+
+// functions for merging 2 trees //
+template <class T>
+void TreeToArray(AVLNode<T> *node, AVLNode<T>** arr, int* index) {
+	if (node != nullptr)
+	{
+		TreeToArray(node->left, arr, index);
+		arr[*index] = new AVLNode<T>(node->data, node->key);
+		(*index)++;
+		TreeToArray(node->right, arr, index);
+	}
+}
+
+// functions for merging 2 trees //
+template <class T>
+void mergeArrays(AVLNode<T>** arr1, AVLNode<T>** arr2, AVLNode<T>** merged_arr, int size1, int size2) {
+	int index1 = 0, index2 = 0, index = 0;
+	for (int i = 0; i < size1 + size2; i++) {
+		if (index2 >= size2 || ( index1 < size1 && (arr1[index1])->key < (arr2[index2])->key) )
+		{
+			merged_arr[index] = arr1[index1];
+			index1++;
+		}
+		else
+		{
+			merged_arr[index] = arr2[index2];
+			index2++;
+		}
+		index++;
+	}
+}
+
+// functions for merging 2 trees //
+template <class T>
+AVLNode<T>* makeEmptyTree(int hight) {
+	if (hight == 0)
+		return nullptr;
+	T nothing(0,0); //only used to set up the tree, value has no meaning
+	AVLNode<T>* node = new AVLNode<T>(nothing);
+	node->depth = hight;
+	node->left = makeEmptyTree<T>(hight - 1);
+	node->right = makeEmptyTree<T>(hight - 1);
+	return node;
+}
+
+// functions for merging 2 trees //
+template <class T>
+AVLNode<T>* removeTopLeafs(AVLNode<T>* node, int* num_of_leafs_to_remove) {
+	if (*num_of_leafs_to_remove > 0 && node->depth == 1) {
+		delete node;
+		(*num_of_leafs_to_remove)--;
+		return nullptr;
+	}
+	if (*num_of_leafs_to_remove > 0 && node != nullptr)
+	{
+		node->right = removeTopLeafs(node->right, num_of_leafs_to_remove);
+		node->left = removeTopLeafs(node->left, num_of_leafs_to_remove);
+	}
+	return node;
+}
+
+// functions for merging 2 trees //
+template <class T>
+void insertArrayIntoTree(AVLNode<T>* node, AVLNode<T>** arr, int* index) {
+	if (node == nullptr)
+		return;
+	insertArrayIntoTree(node->left, arr, index);
+	node->key = arr[*index]->key;
+	node->data = arr[*index]->data;
+	delete arr[*index];
+	(*index)++;
+	insertArrayIntoTree(node->right, arr, index);
+	if (node->left != nullptr) {
+		node->num_of_left = node->left->num_of_left + node->left->num_of_right + 1;
+		node->left_sum = node->left->left_sum + node->left->right_sum + (int)node->left->key;
+	}
+	if (node->right != nullptr) {
+		node->num_of_right = node->right->num_of_left + node->right->num_of_right + 1;
+		node->right_sum = node->right->left_sum + node->right->right_sum + (int)node->right->key;
+	}
+}
+
+// functions for merging 2 trees //
+template <class T>
+AVLTree<T>* makeArrayToTree(AVLNode<T>** arr, int size) {
+	int hight = 0;
+	while (pow(2, hight) < size)
+		hight++;
+	hight++;
+	AVLNode<T>* root = makeEmptyTree<T>(hight);
+	int num_of_leafs_to_remove = (int)pow(2, hight) - size - 1;
+	removeTopLeafs(root, &num_of_leafs_to_remove);
+	int index = 0;
+	insertArrayIntoTree(root, arr, &index);
+	AVLTree<T>* tree = new AVLTree<T>;
+	tree->root = root;
+	return tree;
+}
+
+// functions for merging 2 trees //
+template <class T>
+void getSizeOfTree(AVLNode<T>* node, int* size) {
+	if (node == nullptr)
+		return;
+	getSizeOfTree(node->left, size);
+	(*size)++;
+	getSizeOfTree(node->right, size);
+}
+
+// functions for merging 2 trees //
+template <class T>
+AVLTree<T>* mergeTrees(AVLTree<T>* tree1, AVLTree<T>* tree2) {
+	int size1 = 0, size2 = 0;
+	getSizeOfTree(tree1->root, &size1); 
+	getSizeOfTree(tree2->root, &size2);
+	AVLNode<T>** merged_arr = new AVLNode<T>*[size1 + size2];
+	AVLNode<T>** arr1 = new AVLNode<T>*[size1];
+	AVLNode<T>** arr2 = new AVLNode<T>*[size2];
+	int index = 0;
+	TreeToArray(tree1->root, arr1, &index);
+	index = 0;
+	TreeToArray(tree2->root, arr2, &index);
+	delete tree1;
+	delete tree2;
+	mergeArrays(arr1, arr2, merged_arr, size1, size2);
+	delete[] arr1;
+	delete[] arr2;
+	AVLTree<T>* tree = makeArrayToTree(merged_arr, size1 + size2);
+	delete[] merged_arr;
+	return tree;
+}
+
+
 
 //get the maximum of two numbers
 static int getMax(int first, int second) {
@@ -96,7 +230,7 @@ AVLNode<T>* RotateRight(AVLNode<T>* node)
 
 	//updates sums
 	if (right_node) {
-		node->left_sum = right_node->left_sum + right_node->right_sum + right_node->key;
+		node->left_sum = right_node->left_sum + right_node->right_sum + (int)right_node->key;
 		node->num_of_left = right_node->num_of_left + right_node->num_of_right + 1;
 	}
 	else {
@@ -104,7 +238,7 @@ AVLNode<T>* RotateRight(AVLNode<T>* node)
 		node->num_of_left = 0;
 	}
 
-	left_node->right_sum = node->left_sum + node->right_sum + node->key;
+	left_node->right_sum = node->left_sum + node->right_sum + (int)node->key;
 	left_node->num_of_right = node->num_of_left + node->num_of_right + 1;
 
 	// Update heights
@@ -130,7 +264,7 @@ AVLNode<T>* RotateLeft(AVLNode<T>* node)
 
 	//updates sums 
 	if (left_node) {
-		node->right_sum = left_node->left_sum + left_node->right_sum + left_node->key;
+		node->right_sum = left_node->left_sum + left_node->right_sum + (int)left_node->key;
 		node->num_of_right = left_node->num_of_left + left_node->num_of_right + 1;
 	}
 	else {
@@ -138,7 +272,7 @@ AVLNode<T>* RotateLeft(AVLNode<T>* node)
 		node->num_of_right = 0;
 	}
 
-	right_node->left_sum = node->left_sum + node->right_sum + node->key;
+	right_node->left_sum = node->left_sum + node->right_sum + (int)node->key;
 	right_node->num_of_left = node->num_of_left + node->num_of_right + 1;
 
 	// Update heights
@@ -348,6 +482,9 @@ AVLNode<T>* findKey(AVLNode<T>* root, double key) {
 		return root;
 }
 
+
+
+// for debugging purpuses only //
 template <class T>
 void GetRank(AVLNode<T>* node, int key, int* rank) {
 	if (node != nullptr)
@@ -366,7 +503,7 @@ void GetRank(AVLNode<T>* node, int key, int* rank) {
 	}
 }
 
-
+// for debugging purpuses only //
 template <class T>
 void GetReverseRank(AVLNode<T>* node, int key, int* rank) {
 	if (node != nullptr)
@@ -385,6 +522,7 @@ void GetReverseRank(AVLNode<T>* node, int key, int* rank) {
 	}
 }
 
+// for debugging purpuses only //
 template <class T>
 int Rank(AVLNode<T> *root, int key) {
 	int rank = 0;
@@ -392,7 +530,7 @@ int Rank(AVLNode<T> *root, int key) {
 	return rank;
 }
 
-
+// for debugging purpuses only //
 template <class T>
 int ReverseRank(AVLNode<T> *root, int key) {
 	int rank = 0;
@@ -462,7 +600,6 @@ AVLNode<T>* GetKNode(AVLNode<T>* node , int k) {
 }
 
 
-
 template <class T>
 AVLNode<T>* AVLTree<T>::GetKHighestNde(int k) {
 	return GetKNode(root, k - 1);
@@ -475,11 +612,11 @@ void GetKSum(AVLNode<T>* node, double key , int* sum) {
 	if (node->key < key)
 		GetKSum(node->right, key, sum);
 	else if (node->key > key) {
-		*sum += node->right_sum + node->key;
+		*sum += node->right_sum + (int)node->key;
 		GetKSum(node->left, key, sum);
 	}
 	else
-		*sum += node->right_sum + node->key;
+		*sum += node->right_sum + (int)node->key;
 }
 
 
@@ -492,7 +629,7 @@ int AVLTree<T>::GetKHighestSum(int k) {
 	//cout << k_node->key << endl;
 	//cout << root->key << endl;
 	if (k_node == nullptr)
-		sum = root->right_sum + root->left_sum + root->key;
+		sum = root->right_sum + root->left_sum + (int)root->key;
 	else
 		GetKSum(root, k_node->key, &sum);
 	return sum;

@@ -39,31 +39,17 @@ DSManager::MergeDataCenters(DSManager *DS, int dataCenter1, int dataCenter2) {
         return INVALID_INPUT_DSM;
     int root1 = (*DS).data_centers->Find(dataCenter1)->getID();
     int root2 = (*DS).data_centers->Find(dataCenter2)->getID();
-	//cout << root1 << "   " << root2;
-	//(*DS).data_centers->Find(root1)->getData()->getTrafficTree()->PrintInOrder();
-	//(*DS).data_centers->Find(root2)->getData()->getTrafficTree()->PrintInOrder();
-	//cout << new_root;
-	//(*DS).data_centers->Find(new_root)->getData()->getTrafficTree()->PrintInOrder();
     DataCenter* head1 = (*DS).data_centers->Find(root1)->getData();
     DataCenter* head2 = (*DS).data_centers->Find(root2)->getData();
-	//head1->getTrafficTree()->PrintInOrder();
-	//head2->getTrafficTree()->PrintInOrder();
 	int new_root = (*DS).data_centers->Union(root1, root2)->getID();
-	//cout << head1->NumOfServers() << endl;
-	//cout << head2->NumOfServers() << endl;
-    if (new_root == root1) {
-        while (head2->getTrafficTree()->root != nullptr) {
-			(*head1).getTrafficTree()->Insert((*head2).getTrafficTree()->root->data, (*head2).getTrafficTree()->root->key);
-            (*head2).getTrafficTree()->Delete((*head2).getTrafficTree()->root->key);
-        }
-    }
-    else {
-		while (head1->getTrafficTree()->root != nullptr) {
-			    (*head2).getTrafficTree()->Insert((*head1).getTrafficTree()->root->data, (*head1).getTrafficTree()->root->key);
-                (*head1).getTrafficTree()->Delete((*head1).getTrafficTree()->root->key);
-        }
-    }
-	//(*DS).data_centers->Find(new_root)->getData()->getTrafficTree()->PrintInOrder();
+	if (new_root == root1) {
+		head1->trafficTree = mergeTrees<Server>(head1->getTrafficTree(), head2->getTrafficTree());
+		head2->trafficTree = nullptr;
+	}
+	else {
+		head2->trafficTree = mergeTrees<Server>(head2->getTrafficTree(), head1->getTrafficTree());
+		head1->trafficTree = nullptr;
+	}
     return SUCCESS_DSM;
 }
 
@@ -86,7 +72,6 @@ DSManager::AddServer(DSManager *DS, int dataCenterID, int serverID) {
             break;
     }
     ++num_of_server;
-	//cout <<"dataCenterID is :   "<< dataCenterID << "   num of ser = " << data_centers->Find(dataCenterID)->getData()->NumOfServers() + 1 << endl;
     return (StatusTypeDSM)data_centers->Find(dataCenterID)->getData()->AddServer();
 }
 
@@ -96,14 +81,12 @@ StatusTypeDSM DSManager::RemoveServer(DSManager *DS, int serverID) {
     Server* to_remove = servers->Find(serverID);
 	if (to_remove == nullptr)
 		return FAILURE_DSM;
-	//cout << to_remove;
     int data_center_id = to_remove->BelongsToDataCenter();
     int traffic = to_remove->Traffic();
     if (to_remove == nullptr)
         return FAILURE_DSM;
     traffic_tree->Delete((double)traffic + (double)(1 / ((double)serverID * 2)));
     data_centers->Find(data_center_id)->getData()->getTrafficTree()->Delete((double)traffic + (double)(1 / ((double)serverID * 2)));
-	//cout << "dataCenterID is :   " << data_center_id << "   num of ser = " << data_centers->Find(data_center_id)->getData()->NumOfServers() - 1 << endl;
     return (((StatusTypeDSM)servers->Remove(serverID)==SUCCESS_DSM) &&
             ((StatusTypeDSM)data_centers->Find(data_center_id)->getData()->RemoveServer() == SUCCESS_DSM))
             ? SUCCESS_DSM: FAILURE_DSM;
@@ -112,16 +95,11 @@ StatusTypeDSM DSManager::RemoveServer(DSManager *DS, int serverID) {
 StatusTypeDSM DSManager::SetTraffic(DSManager *DS, int serverID, int traffic) {
 	if (serverID <= 0 || traffic < 0 || DS == nullptr)
 		return INVALID_INPUT_DSM;
-	//DS->servers->PrintTable();
 	Server *server = DS->servers->Find(serverID);
 	if (server == nullptr)
 		return FAILURE_DSM;
-	//cout << (*server).ID() << "   " << (*server).Traffic() << endl;
 	int data_center = server->BelongsToDataCenter();
-	//std::cout << data_center << std::endl;
 	double key = (double)traffic + (double)(1 / ((double)serverID * 2));
-	//double x = 1 + 1 / 2;
-	//cout << key << endl;
 	if ((*server).Traffic() != 0){
 		double old_key = (double)(server->Traffic())
 			+ (double)(1 / ((double)serverID * 2));
@@ -133,7 +111,6 @@ StatusTypeDSM DSManager::SetTraffic(DSManager *DS, int serverID, int traffic) {
 	DS->traffic_tree->Insert(*server, key);
 	DS->data_centers->Find(data_center)->getData()->getTrafficTree()->
 		Insert(*server, key);
-	//DS->servers->PrintTable();
     return SUCCESS_DSM;
 }
 
@@ -143,12 +120,9 @@ DSManager::SumHighestTrafficServers(DSManager *DS, int dataCenterID, int k,
 	if (k < 0 || DS == nullptr || dataCenterID > DS->num_of_DS ||
 		dataCenterID < 0 || traffic == nullptr)
 		return INVALID_INPUT_DSM;
-	//DS->servers->PrintTable();
-	//DS->traffic_tree->PrintInOrder();
 	if (dataCenterID == 0)
 		*traffic = DS->traffic_tree->GetKHighestSum(k);
 	else {
-		//DS->data_centers->Find(dataCenterID)->getData()->getTrafficTree()->PrintInOrder();
 		*traffic = DS->data_centers->Find(dataCenterID)->
 			getData()->getTrafficTree()->GetKHighestSum(k);
 	}
