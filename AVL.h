@@ -619,6 +619,7 @@ int AVLTree<T>::GetKHighestSum(int k) {
 	if (root == nullptr)
 		return 0;
 	int sum = 0;
+	if (k == 0) return 0;
 	AVLNode<T>* k_node = GetKHighestNde(k);
 	//cout << k_node->key << endl;
 	//cout << root->key << endl;
