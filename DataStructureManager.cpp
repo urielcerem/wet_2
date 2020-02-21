@@ -28,6 +28,7 @@ DSManager::MergeDataCenters(DSManager *DS, int dataCenter1, int dataCenter2) {
         return INVALID_INPUT_DSM;
     int root1 = (*DS).data_centers->Find(dataCenter1)->getID();
     int root2 = (*DS).data_centers->Find(dataCenter2)->getID();
+	if (root1 == root2) return SUCCESS_DSM;
     DataCenter* head1 = (*DS).data_centers->Find(root1)->getData();
     DataCenter* head2 = (*DS).data_centers->Find(root2)->getData();
 	int new_root = (*DS).data_centers->Union(root1, root2)->getID();
@@ -41,6 +42,7 @@ DSManager::MergeDataCenters(DSManager *DS, int dataCenter1, int dataCenter2) {
 	}
     return SUCCESS_DSM;
 }
+
 
 StatusTypeDSM
 DSManager::AddServer(DSManager *DS, int dataCenterID, int serverID) {

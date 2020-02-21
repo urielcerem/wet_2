@@ -127,7 +127,7 @@ void insertArrayIntoTree(AVLNode<T>* node, AVLNode<T>** arr, int* index) {
 template <class T>
 AVLTree<T>* makeArrayToTree(AVLNode<T>** arr, int size) {
 	int hight = 0;
-	while (pow(2, hight) < size)
+	while (pow(2, hight) < (size / 2) * 2)
 		hight++;
 	hight++;
 	AVLNode<T>* root = makeEmptyTree<T>(hight);
@@ -158,8 +158,7 @@ AVLTree<T>* mergeTrees(AVLTree<T>* tree1, AVLTree<T>* tree2) {
 	getSizeOfTree(tree2->root, &size2);
 	if (size1 == 0 && size2 == 0) {
 		delete tree2;
-		return tree1;
-	}
+		return tree1; }
 	AVLNode<T>** merged_arr = new AVLNode<T>*[size1 + size2];
 	AVLNode<T>** arr1 = new AVLNode<T>*[size1];
 	AVLNode<T>** arr2 = new AVLNode<T>*[size2];
@@ -172,7 +171,6 @@ AVLTree<T>* mergeTrees(AVLTree<T>* tree1, AVLTree<T>* tree2) {
 	mergeArrays(arr1, arr2, merged_arr, size1, size2);
 	delete[] arr1;
 	delete[] arr2;
-	//cout << "size1 + size2 = " << size1 + size2 << endl;
 	AVLTree<T>* tree = makeArrayToTree(merged_arr, size1 + size2);
 	delete[] merged_arr;
 	return tree;
